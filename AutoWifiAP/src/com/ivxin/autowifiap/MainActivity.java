@@ -82,7 +82,6 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		tb_switcher.setOnCheckedChangeListener(this);
 		cb_charging.setOnCheckedChangeListener(this);
 		cb_btd_name.setOnCheckedChangeListener(this);
-		lv_bt_decices.setOnItemClickListener(this);
 	}
 
 	@Override
