@@ -1,0 +1,73 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp"
+    android:orientation="vertical"
+    tools:context="${relativePackage}.${activityClass}" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end|center_vertical"
+        android:orientation="horizontal" >
+
+        <ToggleButton
+            android:id="@+id/tb_switcher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textOff="已关闭"
+            android:textOn="已启动" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <CheckBox
+            android:id="@+id/cb_charging"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="充电中" />
+
+        <CheckBox
+            android:id="@+id/cb_btd_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="bt_device" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <EditText
+            android:id="@+id/et_ap_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="AP SSID"
+            android:singleLine="true"
+            android:text="AndroidAP" />
+
+        <EditText
+            android:id="@+id/et_ap_pwd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="AP Password"
+            android:singleLine="true"
+            android:text="00000001" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/lv_bt_decices"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </ListView>
+
+</LinearLayout>
