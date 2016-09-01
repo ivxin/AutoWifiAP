@@ -38,7 +38,7 @@ public class BlueToothListener extends BroadcastReceiver {
 		BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 		Log.d(TAG, device.getName() + " ACTION_ACL_DISCONNECTED");
 
-		String spDeviceAddress = sp.getString(AppConstants.DEVICE_ADDRESS, "none");
+		String spDeviceAddress = sp.getString(AppConstants.DEVICE_ADDRESS, "00:11:22:33:AA:BB");
 		if (spDeviceAddress.equals(device.getAddress())) {
 			sp.edit().putBoolean(AppConstants.IS_BTD_CONNECTED, false).commit();
 			Controller.getInstance(context).check();
@@ -49,7 +49,7 @@ public class BlueToothListener extends BroadcastReceiver {
 		BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 		Log.d(TAG, device.getName() + " ACTION_ACL_CONNECTED");
 
-		String spDeviceAddress = sp.getString(AppConstants.DEVICE_ADDRESS, "none");
+		String spDeviceAddress = sp.getString(AppConstants.DEVICE_ADDRESS, "00:11:22:33:AA:BB");
 		if (spDeviceAddress.equals(device.getAddress())) {
 			sp.edit().putBoolean(AppConstants.IS_BTD_CONNECTED, true).commit();
 			Controller.getInstance(context).check();

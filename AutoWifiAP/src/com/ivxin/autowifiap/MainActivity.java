@@ -1,17 +1,17 @@
 package com.ivxin.autowifiap;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothManager;
+import android.bluetooth.BluetoothHeadset;
+import android.bluetooth.BluetoothProfile;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -34,18 +34,55 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	private ListView lv_bt_decices;
 	private ArrayList<String> deviceNameList = new ArrayList<>();
 	private ArrayList<BluetoothDevice> deviceInfoList = new ArrayList<>();
+	private BluetoothAdapter mBluetoothAdapter;
+	protected BluetoothHeadset mBluetoothHeadset;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		sp = getSharedPreferences(AppConstants.SP_FILE_NAME, MODE_PRIVATE);
+		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+		// Establish connection to the proxy.
+		mBluetoothAdapter.getProfileProxy(this, mProfileListener, BluetoothProfile.HEADSET);
 		setContentView(R.layout.activity_main);
 		initView();
 		getBTDeviceInfo();
+		
+	}
+
+	// Define Service Listener of BluetoothProfile
+	private BluetoothProfile.ServiceListener mProfileListener = new BluetoothProfile.ServiceListener() {
+		public void onServiceConnected(int profile, BluetoothProfile proxy) {
+			if (profile == BluetoothProfile.HEADSET) {
+				mBluetoothHeadset = (BluetoothHeadset) proxy;
+				checkBTDeviceConnection();
+			}
+		}
+
+		public void onServiceDisconnected(int profile) {
+			if (profile == BluetoothProfile.HEADSET) {
+				mBluetoothHeadset = null;
+			}
+		}
+	};
+
+	private void checkBTDeviceConnection() {
+		final String btAddress = sp.getString(AppConstants.DEVICE_ADDRESS, "00:11:22:33:AA:BB");
+		boolean connected = false;
+		// call functions on mBluetoothHeadset to check if Bluetooth SCO audio
+		// is connected.
+		List<BluetoothDevice> devices = mBluetoothHeadset.getConnectedDevices();
+		for (final BluetoothDevice dev : devices) {
+			System.out.println(dev.getName()+" is connected.type:"+dev.getType());
+			if (dev.getAddress().equals(btAddress)) {
+				connected=true;
+				break;
+			}
+		}
+		sp.edit().putBoolean(AppConstants.IS_BTD_CONNECTED, connected).commit();
 	}
 
 	private void getBTDeviceInfo() {
-		BluetoothAdapter mBluetoothAdapter = ((BluetoothManager) getSystemService(BLUETOOTH_SERVICE)).getAdapter();
 		Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
 		// If there are paired devices
 		if (pairedDevices.size() > 0) {
@@ -115,15 +152,15 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 			break;
 		case R.id.cb_charging:
 			sp.edit().putBoolean(AppConstants.CHECK_CHARGING, isChecked).commit();
-			if (!isChecked && !cb_btd_name.isChecked()){
+			if (!isChecked && !cb_btd_name.isChecked()) {
 				cb_btd_name.setChecked(true);
 				cb_btd_name.callOnClick();
 			}
-			
+
 			break;
 		case R.id.cb_btd_name:
 			sp.edit().putBoolean(AppConstants.CHECK_BTDevice, isChecked).commit();
-			if (!isChecked && !cb_charging.isChecked()){
+			if (!isChecked && !cb_charging.isChecked()) {
 				cb_charging.setChecked(true);
 				cb_charging.callOnClick();
 			}
